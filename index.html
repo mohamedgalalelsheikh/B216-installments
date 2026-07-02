@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول أقساط الوحدة B216 — The 8 Extension</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F0F3EE;
+    --paper-raised:#FBFCFA;
+    --ink:#182420;
+    --ink-soft:#4B5952;
+    --navy:#17212B;
+    --navy-soft:#25323F;
+    --gold:#B8873E;
+    --gold-soft:#E7CE9B;
+    --green:#1F5C43;
+    --green-soft:#DCEAE2;
+    --red:#A63D2D;
+    --red-soft:#F4DED9;
+    --line:#D6D9CF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(23,33,43,0.035) 40px),
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;
+    padding:28px 16px 80px;
+    min-height:100vh;
+  }
+  .wrap{max-width:920px; margin:0 auto;}
+
+  /* ===== letterhead ===== */
+  .letterhead{
+    background:var(--navy);
+    color:var(--paper-raised);
+    border-radius:18px;
+    padding:26px 28px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(23,33,43,0.25);
+  }
+  .letterhead::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 85% -10%, rgba(184,135,62,0.35), transparent 55%);
+    pointer-events:none;
+  }
+  .brand-row{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; position:relative;}
+  .brand-title{font-family:'Tajawal',sans-serif; font-weight:900; font-size:1.5rem; letter-spacing:0.5px;}
+  .brand-sub{font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--gold-soft); margin-top:4px; letter-spacing:1px;}
+  .unit-badge{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(231,206,155,0.4);
+    border-radius:10px;
+    padding:8px 14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--gold-soft);
+    text-align:center;
+  }
+  .unit-badge b{display:block; font-size:1rem; color:#fff; font-family:'Tajawal',sans-serif;}
+
+  /* ===== summary strip ===== */
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:-18px;
+    position:relative;
+    z-index:2;
+    padding:0 4px;
+  }
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    box-shadow:0 6px 16px rgba(23,33,43,0.08);
+  }
+  .card .label{font-size:0.72rem; color:var(--ink-soft); font-weight:500;}
+  .card .value{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1.15rem; margin-top:4px; direction:ltr; text-align:right;}
+  .card.total .value{color:var(--navy);}
+  .card.paid .value{color:var(--green);}
+  .card.remain .value{color:var(--gold);}
+  .card .bar{height:5px; border-radius:4px; background:var(--line); margin-top:10px; overflow:hidden;}
+  .card .bar > div{height:100%; background:var(--green); width:0%; transition:width .4s ease;}
+
+  /* ===== alert banner ===== */
+  .alert-zone{margin-top:16px; display:flex; flex-direction:column; gap:8px;}
+  .alert{
+    border-radius:12px;
+    padding:12px 16px;
+    font-size:0.85rem;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:1px solid transparent;
+  }
+  .alert.due{background:var(--red-soft); border-color:#e2b8ac; color:var(--red);}
+  .alert.soon{background:var(--gold-soft); border-color:#d9b972; color:#7a5a1f;}
+  .alert-dot{width:8px; height:8px; border-radius:50%; background:currentColor; flex:none;}
+  .alert b{font-family:'JetBrains Mono',monospace;}
+
+  /* ===== controls ===== */
+  .controls{
+    margin-top:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .controls .left{display:flex; align-items:center; gap:8px; font-size:0.8rem; color:var(--ink-soft);}
+  .controls input[type=number]{
+    width:56px; padding:4px 6px; border:1px solid var(--line); border-radius:6px;
+    font-family:'JetBrains Mono',monospace; text-align:center; background:var(--paper-raised);
+  }
+  .notif-btn{
+    background:var(--navy); color:#fff; border:none; border-radius:10px;
+    padding:8px 16px; font-size:0.8rem; cursor:pointer; font-family:'IBM Plex Sans Arabic',sans-serif;
+    display:flex; align-items:center; gap:6px;
+  }
+  .notif-btn:active{transform:scale(0.98);}
+  .notif-btn.on{background:var(--green);}
+
+  /* ===== ledger list ===== */
+  .ledger{margin-top:18px; display:flex; flex-direction:column; gap:10px;}
+  .row{
+    display:grid;
+    grid-template-columns:34px 1fr auto auto 90px;
+    align-items:center;
+    gap:12px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    position:relative;
+  }
+  .row::before{
+    content:"";
+    position:absolute; right:-1px; top:8px; bottom:8px; width:0;
+    border-right:2px dashed var(--line);
+  }
+  .row.paid{opacity:0.55;}
+  .row.paid .amount{text-decoration:line-through; text-decoration-color:var(--green);}
+  .no{
+    font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:#fff;
+    background:var(--navy-soft); border-radius:8px; width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .info .type{font-weight:600; font-size:0.9rem;}
+  .info .meta{font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--ink-soft); margin-top:2px; direction:ltr; text-align:right;}
+  .amount{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.95rem; direction:ltr; white-space:nowrap;}
+  .status-pill{
+    font-size:0.68rem; font-weight:600; border-radius:20px; padding:5px 10px; text-align:center; white-space:nowrap;
+  }
+  .status-pill.paid{background:var(--green-soft); color:var(--green);}
+  .status-pill.overdue{background:var(--red-soft); color:var(--red);}
+  .status-pill.soon{background:var(--gold-soft); color:#7a5a1f;}
+  .status-pill.upcoming{background:#E7EBF0; color:var(--navy-soft);}
+  .chk{
+    width:22px; height:22px; border-radius:6px; border:2px solid var(--line); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; background:var(--paper-raised); justify-self:center;
+  }
+  .chk.checked{background:var(--green); border-color:var(--green); color:#fff; font-size:0.8rem;}
+
+  .extra-note{
+    margin-top:18px; background:var(--gold-soft); border:1px solid #d9b972; border-radius:12px;
+    padding:14px 16px; font-size:0.82rem; color:#5b430f; line-height:1.7;
+  }
+  .footer-note{margin-top:22px; font-size:0.72rem; color:var(--ink-soft); text-align:center; line-height:1.8;}
+
+  @media (max-width:600px){
+    .summary{grid-template-columns:1fr;}
+    .row{grid-template-columns:28px 1fr auto; grid-template-areas:"no info amount" "chk info status";}
+    .row .no{grid-area:no;}
+    .row .info{grid-area:info;}
+    .row .amount{grid-area:amount;}
+    .row .status-pill{grid-area:status; justify-self:start;}
+    .row .chk{grid-area:chk;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="letterhead">
+    <div class="brand-row">
+      <div>
+        <div class="brand-title">الجابري للتطوير العقاري</div>
+        <div class="brand-sub">EL GABRY DEVELOPMENTS — حافظة استلام شيكات</div>
+      </div>
+      <div class="unit-badge">The 8 Extension<b>وحدة B216</b></div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="card total">
+      <div class="label">إجمالي قيمة العقد</div>
+      <div class="value" id="totalVal">—</div>
+    </div>
+    <div class="card paid">
+      <div class="label">المسدد حتى الآن</div>
+      <div class="value" id="paidVal">—</div>
+      <div class="bar"><div id="paidBar"></div></div>
+    </div>
+    <div class="card remain">
+      <div class="label">المتبقي من إجمالي العقد</div>
+      <div class="value" id="remainVal">—</div>
+    </div>
+  </div>
+
+  <div class="alert-zone" id="alertZone"></div>
+
+  <div class="controls">
+    <div class="left">
+      تنبيه قبل الاستحقاق بـ
+      <input type="number" id="daysInput" min="1" max="90" value="15">
+      يوم
+    </div>
+    <button class="notif-btn" id="notifBtn">🔔 تفعيل تنبيهات المتصفح</button>
+  </div>
+
+  <div class="ledger" id="ledger"></div>
+
+  <div class="footer-note">
+    البيانات محفوظة تلقائيًا على هذا الجهاز. تحديد "مدفوع" يخصم القيمة من الرصيد المتبقي فورًا.<br>
+    تنبيهات المتصفح تعمل فقط أثناء فتح هذه الصفحة على هذا الجهاز، وليست إشعارات push حقيقية عبر الشبكة.
+  </div>
+
+</div>
+
+<script>
+const payments = [
+  {no:'عربون', check:'downpayment-2024', amount:1000000, date:'2024-10-01', type:'مقدم التعاقد'},
+  {no:'مقدم', check:'76697674', amount:963000, date:'2024-10-10', type:'دفعة باقي المقدم'},
+  {no:1,  check:'76697673', amount:400000, date:'2025-01-05', type:'دفعة ربع سنوية'},
+  {no:2,  check:'76697675', amount:981500, date:'2025-04-05', type:'دفعة ربع سنوية'},
+  {no:3,  check:'76697676', amount:400000, date:'2025-07-05', type:'دفعة ربع سنوية'},
+  {no:4,  check:'76697677', amount:400000, date:'2025-10-05', type:'دفعة ربع سنوية'},
+  {no:5,  check:'76697678', amount:706914, date:'2026-01-05', type:'دفعة ربع سنوية'},
+  {no:6,  check:'76697679', amount:476729, date:'2026-04-05', type:'دفعة ربع سنوية'},
+  {no:7,  check:'76697680', amount:476729, date:'2026-07-05', type:'دفعة ربع سنوية'},
+  {no:8,  check:'76697681', amount:476729, date:'2026-10-05', type:'دفعة ربع سنوية'},
+  {no:9,  check:'76697682', amount:476729, date:'2027-01-05', type:'دفعة ربع سنوية'},
+  {no:10, check:'76697683', amount:476729, date:'2027-04-05', type:'دفعة ربع سنوية'},
+  {no:11, check:'76697684', amount:476729, date:'2027-07-05', type:'دفعة ربع سنوية'},
+  {no:12, check:'76697685', amount:476729, date:'2027-10-05', type:'دفعة ربع سنوية'},
+  {no:13, check:'76697686', amount:476729, date:'2028-01-05', type:'دفعة ربع سنوية'},
+  {no:14, check:'76697687', amount:476729, date:'2028-04-05', type:'دفعة ربع سنوية'},
+  {no:15, check:'76697688', amount:476729, date:'2028-07-05', type:'دفعة ربع سنوية'},
+  {no:16, check:'76697689', amount:476729, date:'2028-10-05', type:'دفعة ربع سنوية'},
+  {no:17, check:'76697690', amount:476729, date:'2029-01-05', type:'دفعة ربع سنوية'},
+  {no:18, check:'76697691', amount:476729, date:'2029-04-05', type:'دفعة ربع سنوية'},
+  {no:19, check:'76697692', amount:476729, date:'2029-07-05', type:'دفعة ربع سنوية'},
+  {no:20, check:'76697693', amount:476729, date:'2029-10-05', type:'دفعة ربع سنوية'},
+  {no:21, check:'76697694', amount:476729, date:'2030-01-05', type:'دفعة ربع سنوية'},
+  {no:22, check:'76697695', amount:476729, date:'2030-04-05', type:'دفعة ربع سنوية'},
+  {no:23, check:'76697696', amount:476729, date:'2030-07-05', type:'دفعة ربع سنوية'},
+  {no:24, check:'76697697', amount:476729, date:'2030-10-05', type:'دفعة ربع سنوية'},
+  {no:25, check:'76697698', amount:476729, date:'2031-01-05', type:'دفعة ربع سنوية'},
+  {no:26, check:'76697699', amount:476729, date:'2031-04-05', type:'دفعة ربع سنوية'},
+  {no:27, check:'76697700', amount:476729, date:'2031-07-05', type:'دفعة ربع سنوية'},
+  {no:28, check:'76697701', amount:476729, date:'2031-10-05', type:'دفعة ربع سنوية'},
+  {no:29, check:'76697702', amount:476729, date:'2032-01-05', type:'دفعة ربع سنوية'},
+  {no:30, check:'76697703', amount:476729, date:'2032-04-05', type:'دفعة ربع سنوية'},
+  {no:31, check:'76697704', amount:476729, date:'2032-07-05', type:'دفعة ربع سنوية'},
+  {no:32, check:'76697705', amount:476729, date:'2032-10-05', type:'دفعة ربع سنوية'},
+  {no:33, check:'76697706', amount:476729, date:'2033-01-05', type:'دفعة ربع سنوية'},
+  {no:34, check:'76697707', amount:476729, date:'2033-04-05', type:'دفعة ربع سنوية'},
+  {no:35, check:'76697708', amount:476729, date:'2033-07-05', type:'دفعة ربع سنوية'},
+  {no:36, check:'76697709', amount:476716, date:'2033-10-05', type:'دفعة ربع سنوية'},
+  {no:'صيانة', check:'76697710', amount:1374100, date:'2028-10-05', type:'دفعة الصيانة'},
+];
+
+const TOTAL = payments.reduce((s,p)=>s+p.amount,0);
+let paidState = {};
+let warnDays = 15;
+let notifOn = false;
+let notifTimer = null;
+
+function fmt(n){ return n.toLocaleString('en-US') + ' ج.م'; }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function daysUntil(dateStr){
+  const today = new Date(todayISO());
+  const due = new Date(dateStr);
+  return Math.round((due - today) / (1000*60*60*24));
+}
+function dateAr(dateStr){
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('ar-EG', {year:'numeric', month:'long', day:'numeric'});
+}
+
+async function loadState(){
+  try{
+    const raw = localStorage.getItem('b216-paid-state');
+    if(raw) paidState = JSON.parse(raw);
+  }catch(e){ paidState = {}; }
+  try{
+    const raw2 = localStorage.getItem('b216-warn-days');
+    if(raw2) warnDays = parseInt(raw2) || 15;
+  }catch(e){}
+  document.getElementById('daysInput').value = warnDays;
+  if(paidState['downpayment-2024'] === undefined){
+    paidState['downpayment-2024'] = true;
+    await saveState();
+  }
+}
+async function saveState(){
+  try{ localStorage.setItem('b216-paid-state', JSON.stringify(paidState)); }catch(e){}
+}
+async function saveDays(){
+  try{ localStorage.setItem('b216-warn-days', String(warnDays)); }catch(e){}
+}
+
+function statusOf(p){
+  if(paidState[p.check]) return 'paid';
+  const d = daysUntil(p.date);
+  if(d < 0) return 'overdue';
+  if(d <= warnDays) return 'soon';
+  return 'upcoming';
+}
+function statusLabel(st, d){
+  if(st==='paid') return 'مدفوع ✓';
+  if(st==='overdue') return `متأخر ${Math.abs(d)} يوم`;
+  if(st==='soon') return d===0 ? 'مستحق اليوم' : `خلال ${d} يوم`;
+  return 'قادم';
+}
+
+function render(){
+  const paidTotal = payments.filter(p=>paidState[p.check]).reduce((s,p)=>s+p.amount,0);
+  const remain = TOTAL - paidTotal;
+  document.getElementById('totalVal').textContent = fmt(TOTAL);
+  document.getElementById('paidVal').textContent = fmt(paidTotal);
+  document.getElementById('remainVal').textContent = fmt(remain);
+  document.getElementById('paidBar').style.width = Math.round(paidTotal/TOTAL*100) + '%';
+
+  const ledger = document.getElementById('ledger');
+  ledger.innerHTML = '';
+  payments.forEach(p=>{
+    const st = statusOf(p);
+    const d = daysUntil(p.date);
+    const row = document.createElement('div');
+    row.className = 'row' + (st==='paid' ? ' paid' : '');
+    row.innerHTML = `
+      <div class="no">${p.no}</div>
+      <div class="info">
+        <div class="type">${p.type}</div>
+        <div class="meta">شيك ${p.check} — ${dateAr(p.date)}</div>
+      </div>
+      <div class="amount">${fmt(p.amount)}</div>
+      <div class="status-pill ${st}">${statusLabel(st,d)}</div>
+      <div class="chk ${paidState[p.check] ? 'checked' : ''}" data-check="${p.check}">${paidState[p.check] ? '✓' : ''}</div>
+    `;
+    ledger.appendChild(row);
+  });
+
+  ledger.querySelectorAll('.chk').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const key = el.dataset.check;
+      paidState[key] = !paidState[key];
+      await saveState();
+      render();
+    });
+  });
+
+  renderAlerts();
+}
+
+function renderAlerts(){
+  const zone = document.getElementById('alertZone');
+  zone.innerHTML = '';
+  const overdue = payments.filter(p=>!paidState[p.check] && daysUntil(p.date) < 0);
+  const soon = payments.filter(p=>!paidState[p.check] && daysUntil(p.date) >= 0 && daysUntil(p.date) <= warnDays);
+
+  if(overdue.length){
+    const div = document.createElement('div');
+    div.className = 'alert due';
+    div.innerHTML = `<span class="alert-dot"></span> يوجد <b>${overdue.length}</b> قسط متأخر السداد — أقربها القسط رقم <b>${overdue[0].no}</b> بتاريخ ${dateAr(overdue[0].date)} بقيمة ${fmt(overdue[0].amount)}`;
+    zone.appendChild(div);
+  }
+  if(soon.length){
+    const div = document.createElement('div');
+    div.className = 'alert soon';
+    const p = soon[0];
+    const d = daysUntil(p.date);
+    div.innerHTML = `<span class="alert-dot"></span> القسط رقم <b>${p.no}</b> (${fmt(p.amount)}) مستحق ${d===0?'اليوم':'خلال '+d+' يوم'} — ${dateAr(p.date)}`;
+    zone.appendChild(div);
+  }
+  if(!overdue.length && !soon.length){
+    const div = document.createElement('div');
+    div.className = 'alert soon';
+    div.style.background = '#DCEAE2'; div.style.color = '#1F5C43'; div.style.borderColor = '#bcdccb';
+    div.innerHTML = `<span class="alert-dot"></span> لا توجد أقساط مستحقة خلال ${warnDays} يوم القادمة.`;
+    zone.appendChild(div);
+  }
+}
+
+function checkBrowserNotifications(){
+  if(!notifOn || !('Notification' in window) || Notification.permission !== 'granted') return;
+  payments.forEach(p=>{
+    if(paidState[p.check]) return;
+    const d = daysUntil(p.date);
+    if(d >= 0 && d <= warnDays){
+      const seenKey = 'notified-' + p.check + '-' + todayISO();
+      if(!sessionStorage_safe(seenKey)){
+        new Notification('تذكير بموعد قسط — وحدة B216', {
+          body: `القسط رقم ${p.no} بقيمة ${fmt(p.amount)} مستحق ${d===0?'اليوم':'خلال '+d+' يوم'} (${dateAr(p.date)})`,
+        });
+        markSessionSafe(seenKey);
+      }
+    }
+  });
+}
+// avoid real localStorage per artifact rules; use in-memory set instead
+const notifiedSet = new Set();
+function sessionStorage_safe(key){ return notifiedSet.has(key); }
+function markSessionSafe(key){ notifiedSet.add(key); }
+
+document.getElementById('daysInput').addEventListener('change', async (e)=>{
+  let v = parseInt(e.target.value);
+  if(isNaN(v) || v < 1) v = 1;
+  if(v > 90) v = 90;
+  warnDays = v;
+  e.target.value = v;
+  await saveDays();
+  render();
+});
+
+document.getElementById('notifBtn').addEventListener('click', async ()=>{
+  if(!('Notification' in window)){
+    alert('متصفحك لا يدعم إشعارات سطح المكتب.');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  const btn = document.getElementById('notifBtn');
+  if(perm === 'granted'){
+    notifOn = true;
+    btn.classList.add('on');
+    btn.textContent = '🔔 التنبيهات مفعّلة';
+    checkBrowserNotifications();
+    if(notifTimer) clearInterval(notifTimer);
+    notifTimer = setInterval(checkBrowserNotifications, 60000);
+  }else{
+    alert('لم يتم منح إذن الإشعارات من المتصفح.');
+  }
+});
+
+(async function init(){
+  await loadState();
+  render();
+})();
+</script>
+</body>
+</html>
